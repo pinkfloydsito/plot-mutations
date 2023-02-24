@@ -1,0 +1,3 @@
+Drug;yaxis;Phenotype;Gene;Mutation*;PMID;Author;Position;Domains;;;
+BDQ;1;Resistant;Rv0678;V1A;PMID:26559594;Bloemberg et al., 2015;1;;;;
+BDQ;1;Resistant;Rv0678;S2I;PMID:28320727;Xu et al., 2017;2;;;;
