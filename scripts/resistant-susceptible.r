@@ -27,7 +27,7 @@ colorful_palette <- distinctColorPalette(no_of_colors)
 graph <- ggplot(df, aes(grouping, x = x, xmax=165, y = y, ymin=-2, ymax=2, label=mutations)) 
 graph <- graph + geom_hline(yintercept = 0, color="black", linewidth=5) 
 graph <- graph + geom_segment(aes(x = x, xend = x, y=0, yend=y), color="black")
-graph <- graph + geom_point(size = 2, colour=colorful_palette) + theme_light() + geom_text_repel() + scale_fill_manual(values=cols)
+graph <- graph + geom_point(size = 2, colour=colorful_palette) + theme_light() + geom_text_repel(box.padding=0.5, max.overlaps=Inf) + scale_fill_manual(values=cols)
 graph <- graph + geom_text(label="Mutations found in resistant strains", x=140, y=2.5, color="black" ) 
 graph <- graph + geom_text(label="Mutations found in sensitive strains", x=140, y=-2.5, color="black" )
 
@@ -68,15 +68,38 @@ for (idx in 1:nrow(data)) {
     lastPosition <- data[idx, ][idxPosition]$Position
 }
 
+alreadyDimerization <- FALSE
+dimerizationColor <- randomColor(1, luminosity="dark")
 for(idx in 1:length(domainIntervals)) {
     domain <- domainIntervals[idx][[1]][1]
     xstart <- as.numeric(domainIntervals[idx][[1]][2])
     xend <- as.numeric(domainIntervals[idx][[1]][3])
+    if(domain == "Dimerization") {
+        if(!alreadyDimerization) {
+            alreadyDimerization <- TRUE
+            xstart <- 16
+            xend <- 32
+        } else {
+            xstart <- 101
+            xend <- 160
+        }
+    } else if (domain == "DNA-Binding") {
+        xstart <- 34
+        xend <- 99
+    }
 
     if(domain != "") {
+        
         color <- randomColor(1, luminosity="dark")
+        if(domain == "Dimerization") {
+            color <- dimerizationColor
+        }
+
         graph <- graph + geom_rect(xmin=xstart,xmax=xend,fill=factor(color), ymin=-.05,ymax=.05, size=0.2, alpha=0.3)
-        graph <- graph + geom_label(size=2, x= (xend - xstart)/2 + xstart, y = 0, label = domain, colour = "white", fontface = "bold", fill = factor(color), label.padding = unit(0.5, "lines"))
+        graph <- graph + geom_label(size=2, x= (xend - xstart)/2 + xstart, y = 0, label = domain, fontface = "bold", fill = alpha(c(color), 1), color="black", label.size = NA, 
+                     alpha = 0,
+                     box.padding = 0.80, point.padding = 0.5,
+                     na.rm=TRUE)
     }
 
 }
