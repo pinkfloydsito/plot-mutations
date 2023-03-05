@@ -24,13 +24,16 @@ no_of_colors <- 112
 colorful_palette <- distinctColorPalette(no_of_colors)
 
 
-graph <- ggplot(df, aes(grouping, x = x, xmax=165, y = y, ymin=-2, ymax=2, label=mutations)) 
+graph <- ggplot(df, aes(grouping, x = x, xmax=165, y = y, ymin=-2, ymax=2, label=mutations, angle = 90)) 
 graph <- graph + geom_hline(yintercept = 0, color="black", linewidth=5) 
 graph <- graph + geom_segment(aes(x = x, xend = x, y=0, yend=y), color="black")
 graph <- graph + geom_point(size = 2, colour=colorful_palette) + theme_light()
 graph <- graph + geom_text_repel(box.padding=0.5, max.overlaps=Inf) + scale_fill_manual(values=cols)
+
 graph <- graph + geom_text(label="Mutations found in resistant strains", x=140, y=2.5, color="black" ) 
 graph <- graph + geom_text(label="Mutations found in sensitive strains", x=140, y=-2.5, color="black" )
+
+graph <- graph + theme(axis.text.x = element_text(angle = 90, vjust = 1))
 
 idxPosition = 8
 idxDomain = 9
